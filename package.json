@@ -1,0 +1,15 @@
+{
+  "name": "cpt2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "start": "node ."
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ws": "^7.1.1"
+  }
+}
