@@ -1,5 +1,5 @@
 "use strict";
-const { Reader, Writer } = require('../buffer.js'),
+const { Reader, Writer } = require('../modules/buffer.js'),
     Bullet = require('./bullet.js');
 module.exports = class Player {
     constructor(socket, id, main) {

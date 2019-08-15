@@ -82,7 +82,6 @@ function Update(dT) {
 		players.forEach((player) => updatePos(player));
 		if (myId && players.has(myId)) {
 				const tp = players.get(myId).sprite;
-				//console.log(tp.x);
 				camera.pivot.x = (tp.x - camera.pivot.x) + camera.pivot.x;
 				camera.pivot.y = (tp.y - camera.pivot.y) + camera.pivot.y;
 		}

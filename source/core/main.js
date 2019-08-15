@@ -1,18 +1,18 @@
 "use strict";
-const Grid = require('./grid.js'),
+const Grid = require('../modules/grid.js'),
     Player = require('../entities/player.js'),
     Server = require('./server.js'),
     FakePlayer = require('../entities/fakePlayer.js');
 module.exports = class Main {
     constructor() {
         this.now = this.lastTime = Date.now();
-        this.entities = new Grid(1000);
+        this.entities = new Grid(10000);
         this.movingEntities = new Map();
         this.players = new Map();
         this.lastId = 0;
         this.wsServer = new Server(this);
         this.wsServer.init();
-        for(var i = 0; i < 10000; i++) {
+        for(var i = 0; i < 100000; i++) {
             var fake = new FakePlayer(this.nextId(), this)
             this.players.set(fake.id, fake)
         }

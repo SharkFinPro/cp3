@@ -1,5 +1,5 @@
 "use strict";
-const { Reader, Writer } = require('../buffer.js');
+const { Reader, Writer } = require('../modules/buffer.js');
 module.exports = class Player {
     constructor(id, main) {
         this.id = id;
@@ -23,7 +23,7 @@ module.exports = class Player {
     }
 
     init() {
-        let area = 8000;
+        let area = 100000;
         this.spawn(Math.floor((Math.random() * area) - area) * (Math.random() < 0.5 ? -1 : 1), Math.floor((Math.random() * area) - area) * (Math.random() < 0.5 ? -1 : 1));
     }
 
