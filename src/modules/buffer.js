@@ -39,9 +39,9 @@ class Reader {
     }
 
     readString8() {
-        var data = "";
+        const data = "";
         while (true) {
-            var char = this.readUInt8();
+            const char = this.readUInt8();
             if (char == 0) break;
             data += String.fromCharCode(char);
         }
@@ -49,10 +49,10 @@ class Reader {
     }
 
     readString16(le) {
-        var data = "";
+        const data = "";
         le = le || false;
         while (true) {
-            var char = this.readUInt16(le);
+            const char = this.readUInt16(le);
             if (char == 0) break;
             data += String.fromCharCode(char);
         }
@@ -60,16 +60,16 @@ class Reader {
     }
 
     readString32(le) {
-        var data = "";
+        const data = "";
         le = le || false;
         while (true) {
-            var char = this.readUInt32(le);
+            const char = this.readUInt32(le);
             if (char == 0) break;
             data += String.fromCharCode(char);
         }
         return data;
     }
-}
+};
 
 class Writer {
     constructor(size) {
@@ -128,7 +128,7 @@ class Writer {
 
     writeString8(n) {
         if (typeof n !== 'string') return;
-        for (var i in n) {
+        for (let i in n) {
             this.writeUInt8(n.charCodeAt(i));
         }
         return this.writeUInt8(0);
@@ -137,7 +137,7 @@ class Writer {
     writeString16(n, le) {
         if (typeof n !== 'string') return;
         le = le || false;
-        for (var i in n) {
+        for (let i in n) {
             this.writeUInt16(n.charCodeAt(i), le);
         }
         return this.writeUInt16(0);
@@ -146,14 +146,14 @@ class Writer {
     writeString32(n, le) {
         if (typeof n !== 'string') return;
         le = le || false;
-        for (var i in n) {
+        for (let i in n) {
             this.writeUInt32(n.charCodeAt(i), le);
         }
         return this.writeUInt32(0);
     }
-}
+};
 
 module.exports = {
     Writer: Writer,
     Reader: Reader
-}
+};

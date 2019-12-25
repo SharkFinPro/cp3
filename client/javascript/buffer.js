@@ -11,7 +11,7 @@
         }
 
         readUInt8() {
-            return this.buffer.getUint8(this.index++)
+            return this.buffer.getUint8(this.index++);
         }
 
         readInt16(le) {
@@ -26,7 +26,7 @@
 
         readInt32(le) {
             this.index += 4;
-            return this.buffer.getInt32(this.index - 4, le || false)
+            return this.buffer.getInt32(this.index - 4, le || false);
         }
 
         readUInt32(le) {
@@ -40,9 +40,9 @@
         }
 
         readString8() {
-            var data = "";
+            const data = "";
             while (true) {
-                var char = this.readUInt8();
+                const char = this.readUInt8();
                 if (char == 0) break;
                 data += String.fromCharCode(char);
             }
@@ -50,10 +50,10 @@
         }
 
         readString16(le) {
-            var data = "";
+            const data = "";
             le = le || false;
             while (true) {
-                var char = this.readUInt16(le);
+                const char = this.readUInt16(le);
                 if (char == 0) break;
                 data += String.fromCharCode(char);
             }
@@ -61,10 +61,10 @@
         }
 
         readString32(length, le) {
-            var data = "";
+            const data = "";
             le = le || false;
             while (true) {
-                var char = this.readUInt32(le);
+                const char = this.readUInt32(le);
                 if (char == 0) break;
                 data += String.fromCharCode(char);
             }
@@ -83,7 +83,7 @@
         }
 
         reset() {
-            this.index = 0
+            this.index = 0;
             return this;
         }
 
@@ -129,8 +129,8 @@
 
         writeString8(n) {
             if (typeof n !== 'string') return;
-            for (var i in n) {
-                this.writeUInt8(n.charCodeAt(i))
+            for (let i in n) {
+                this.writeUInt8(n.charCodeAt(i));
             }
             return this.writeUInt8(0);
         }
@@ -138,8 +138,8 @@
         writeString16(n, le) {
             if (typeof n !== 'string') return;
             le = le || false;
-            for (var i in n) {
-                this.writeUInt16(n.charCodeAt(i), le)
+            for (let i in n) {
+                this.writeUInt16(n.charCodeAt(i), le);
             }
             return this.writeUInt16(0);
         }
@@ -147,8 +147,8 @@
         writeString32(n, le) {
             if (typeof n !== 'string') return;
             le = le || false;
-            for (var i in n) {
-                this.writeUInt32(n.charCodeAt(i), le)
+            for (let i in n) {
+                this.writeUInt32(n.charCodeAt(i), le);
             }
             return this.writeUInt32(0);
         }
@@ -157,5 +157,5 @@
     window.Buffer = {
         Writer: Writer,
         Reader: Reader
-    }
+    };
 })();

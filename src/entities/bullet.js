@@ -12,7 +12,7 @@ module.exports = class Player {
         this.zdir = zdir;
         this.life = 500;
         this.alive = false;
-        this.init()
+        this.init();
     }
 
     init() {
@@ -51,4 +51,4 @@ module.exports = class Player {
     boundsCollide(a, b) {
         return !(a.minX > b.maxX || a.maxX < b.minX || a.minZ > b.maxZ || a.maxZ < b.minZ);
     }
-}
+};

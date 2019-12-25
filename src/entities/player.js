@@ -35,7 +35,7 @@ module.exports = class Player {
             .writeUInt32(this.id);
         this.socket.send(id.toBuffer());
         this.socket.on('message', (data) => {
-            var reader = new Reader(Buffer.from(data));
+            const reader = new Reader(Buffer.from(data));
             switch(reader.readUInt8()) {
                 case 2:
                     this.keys[reader.readUInt8()] = false;
@@ -165,4 +165,4 @@ module.exports = class Player {
     boundsCollide(a, b) {
         return !(a.minX > b.maxX || a.maxX < b.minX || a.minZ > b.maxZ || a.maxZ < b.minZ);
     }
-}
+};

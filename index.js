@@ -1,3 +1,3 @@
 "use strict";
-const Main = require('./source/core/main.js');
+const Main = require('./src/core/main.js');
 const Server = new Main();

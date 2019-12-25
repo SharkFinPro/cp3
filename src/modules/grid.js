@@ -6,13 +6,13 @@ module.exports = class Grid {
     }
 
     insert(data, rect) {
-        var pMin = this.getKey(rect.minX, rect.minZ),
+        const pMin = this.getKey(rect.minX, rect.minZ),
             pMax = this.getKey(rect.maxX, rect.maxZ);
-        for (var x = pMin.x; x <= pMax.x; x++) {
-            for (var z = pMin.z; z <= pMax.z; z++) {
+        for (let x = pMin.x; x <= pMax.x; x++) {
+            for (let z = pMin.z; z <= pMax.z; z++) {
                 let key = x + "-" + z;
                 if (!this.grid.has(key)) this.grid.set(key, []);
-                this.grid.get(key).push(data)
+                this.grid.get(key).push(data);
             }
         }
         data._hashPMin = pMin;
@@ -20,8 +20,8 @@ module.exports = class Grid {
     }
 
     delete(data) {
-        for (var x = data._hashPMin.x; x <= data._hashPMax.x; x++) {
-            for (var z = data._hashPMin.z; z <= data._hashPMax.z; z++) {
+        for (let x = data._hashPMin.x; x <= data._hashPMax.x; x++) {
+            for (let z = data._hashPMin.z; z <= data._hashPMax.z; z++) {
                 let key = x + "-" + z;
                 let cell = this.grid.get(key);
                 let index = cell.indexOf(data);
@@ -32,15 +32,15 @@ module.exports = class Grid {
     }
 
     retrieve(rect) {
-        var results = new Map();
-        var pMin = this.getKey(rect.minX, rect.minZ),
+        const results = new Map();
+        const pMin = this.getKey(rect.minX, rect.minZ),
             pMax = this.getKey(rect.maxX, rect.maxZ);
-        for (var x = pMin.x; x <= pMax.x; x++) {
-            for (var z = pMin.z; z <= pMax.z; z++) {
-                var key = x + "-" + z;
-                var cell = this.grid.get(key);
+        for (let x = pMin.x; x <= pMax.x; x++) {
+            for (let z = pMin.z; z <= pMax.z; z++) {
+                const key = x + "-" + z;
+                const cell = this.grid.get(key);
                 if (cell) {
-                    for (var i = 0; i < cell.length; i++) {
+                    for (let i = 0; i < cell.length; i++) {
                         results.set(cell[i].id, cell[i]);
                     }
                 }
@@ -50,7 +50,7 @@ module.exports = class Grid {
     }
 
     update(data, rect) {
-        var pMin = this.getKey(rect.minX, rect.minZ),
+        const pMin = this.getKey(rect.minX, rect.minZ),
             pMax = this.getKey(rect.maxX, rect.maxZ);
         if (pMin.x !== data._hashPMin.x || pMin.z !== data._hashPMin.z || pMax.x !== data._hashPMax.x || pMax.z !== data._hashPMax.z) {
             this.delete(data);
@@ -63,4 +63,4 @@ module.exports = class Grid {
     getKey(x, z) {
         return {x: Math.floor(x / this.binSize), z: Math.floor(z / this.binSize)};
     }
-}
+};
