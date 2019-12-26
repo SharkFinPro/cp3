@@ -1,4 +1,4 @@
-const { Reader, Writer } = require('../modules/buffer.js');
+const { Reader, Writer } = require('../lib/buffer.js');
 module.exports = class Player {
     constructor(id, main, xdir, ydir, x, y) {
         this.id = id;

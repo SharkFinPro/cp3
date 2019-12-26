@@ -1,4 +1,4 @@
-const { Reader, Writer } = require('../modules/buffer.js'),
+const { Reader, Writer } = require('../lib/buffer.js'),
     Bullet = require('./bullet.js');
 module.exports = class Player {
     constructor(socket, id, main) {
