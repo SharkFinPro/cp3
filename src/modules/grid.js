@@ -9,7 +9,7 @@ module.exports = class Grid {
             pMax = this.getKey(rect.maxX, rect.maxY);
         for (let x = pMin.x; x <= pMax.x; x++) {
             for (let y = pMin.y; y <= pMax.y; y++) {
-                let key = x + "-" + y;
+                const key = x + "-" + y;
                 if (!this.grid.has(key)) this.grid.set(key, []);
                 this.grid.get(key).push(data);
             }
@@ -21,9 +21,8 @@ module.exports = class Grid {
     delete(data) {
         for (let x = data._hashPMin.x; x <= data._hashPMax.x; x++) {
             for (let y = data._hashPMin.y; y <= data._hashPMax.y; y++) {
-                let key = x + "-" + y;
-                let cell = this.grid.get(key);
-                let index = cell.indexOf(data);
+                const cell = this.grid.get(x + "-" + y);
+                const index = cell.indexOf(data);
                 if (index != -1) cell.splice(index, 1);
             }
         }
@@ -56,8 +55,6 @@ module.exports = class Grid {
             this.insert(data, rect);
         }
     }
-
-
 
     getKey(x, y) {
         return {x: Math.floor(x / this.binSize), y: Math.floor(y / this.binSize)};

@@ -27,7 +27,7 @@ module.exports = class Player {
     }
 
     init() {
-        let id = new Writer(5)
+        const id = new Writer(5)
             .writeUInt8(1)
             .writeUInt32(this.id);
         this.socket.send(id.toBuffer());

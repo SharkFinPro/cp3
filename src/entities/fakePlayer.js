@@ -20,7 +20,7 @@ module.exports = class Player {
     }
 
     init() {
-        let area = 100000;
+        const area = 100000;
         this.spawn(Math.floor((Math.random() * area) - area) * (Math.random() < 0.5 ? -1 : 1), Math.floor((Math.random() * area) - area) * (Math.random() < 0.5 ? -1 : 1));
     }
 
@@ -31,15 +31,9 @@ module.exports = class Player {
     }
 
     spawn(x, y) {
-        /*this.x = x;
-        this.y = y;
-        this.main.movingEntities.set(this.id, this);
-        this.main.entities.insert(this, this.getBoundsCircle(this.x, this.y, this.r));
-        this.alive = true;*/
         this.x = x;
         this.y = y;
         this.main.movingEntities.set(this.id, this);
-        //console.log(this.main.movingEntities);
         this.main.entities.insert(this, this.getBoundsCircle(this.x, this.y, this.r));
         this.alive = true;
     }
