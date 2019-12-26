@@ -1,4 +1,3 @@
-"use strict";
 module.exports = class Grid {
     constructor(binSize) {
         this.binSize = binSize;
@@ -6,11 +5,11 @@ module.exports = class Grid {
     }
 
     insert(data, rect) {
-        const pMin = this.getKey(rect.minX, rect.minZ),
-            pMax = this.getKey(rect.maxX, rect.maxZ);
+        const pMin = this.getKey(rect.minX, rect.minY),
+            pMax = this.getKey(rect.maxX, rect.maxY);
         for (let x = pMin.x; x <= pMax.x; x++) {
-            for (let z = pMin.z; z <= pMax.z; z++) {
-                let key = x + "-" + z;
+            for (let y = pMin.y; y <= pMax.y; y++) {
+                let key = x + "-" + y;
                 if (!this.grid.has(key)) this.grid.set(key, []);
                 this.grid.get(key).push(data);
             }
@@ -21,8 +20,8 @@ module.exports = class Grid {
 
     delete(data) {
         for (let x = data._hashPMin.x; x <= data._hashPMax.x; x++) {
-            for (let z = data._hashPMin.z; z <= data._hashPMax.z; z++) {
-                let key = x + "-" + z;
+            for (let y = data._hashPMin.y; y <= data._hashPMax.y; y++) {
+                let key = x + "-" + y;
                 let cell = this.grid.get(key);
                 let index = cell.indexOf(data);
                 if (index != -1) cell.splice(index, 1);
@@ -33,11 +32,11 @@ module.exports = class Grid {
 
     retrieve(rect) {
         const results = new Map();
-        const pMin = this.getKey(rect.minX, rect.minZ),
-            pMax = this.getKey(rect.maxX, rect.maxZ);
+        const pMin = this.getKey(rect.minX, rect.minY),
+            pMax = this.getKey(rect.maxX, rect.maxY);
         for (let x = pMin.x; x <= pMax.x; x++) {
-            for (let z = pMin.z; z <= pMax.z; z++) {
-                const key = x + "-" + z;
+            for (let y = pMin.y; y <= pMax.y; y++) {
+                const key = x + "-" + y;
                 const cell = this.grid.get(key);
                 if (cell) {
                     for (let i = 0; i < cell.length; i++) {
@@ -50,9 +49,9 @@ module.exports = class Grid {
     }
 
     update(data, rect) {
-        const pMin = this.getKey(rect.minX, rect.minZ),
-            pMax = this.getKey(rect.maxX, rect.maxZ);
-        if (pMin.x !== data._hashPMin.x || pMin.z !== data._hashPMin.z || pMax.x !== data._hashPMax.x || pMax.z !== data._hashPMax.z) {
+        const pMin = this.getKey(rect.minX, rect.minY),
+            pMax = this.getKey(rect.maxX, rect.maxY);
+        if (pMin.x !== data._hashPMin.x || pMin.y !== data._hashPMin.y || pMax.x !== data._hashPMax.x || pMax.y !== data._hashPMax.y) {
             this.delete(data);
             this.insert(data, rect);
         }
@@ -60,7 +59,7 @@ module.exports = class Grid {
 
 
 
-    getKey(x, z) {
-        return {x: Math.floor(x / this.binSize), z: Math.floor(z / this.binSize)};
+    getKey(x, y) {
+        return {x: Math.floor(x / this.binSize), y: Math.floor(y / this.binSize)};
     }
 };

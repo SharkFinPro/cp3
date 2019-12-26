@@ -1,4 +1,3 @@
-"use strict";
 const { Reader, Writer } = require('../modules/buffer.js');
 module.exports = class Player {
     constructor(id, main) {
@@ -6,17 +5,15 @@ module.exports = class Player {
         this.main = main;
         this.x = 0;
         this.y = 0;
-        this.z = 0;
         this.r = 25;
         this.speed = 0.2;
         this.xvel = 0;
         this.yvel = 0;
-        this.zvel = 0;
         this.collisionBox = {
             minX: 0,
-            minZ: 0,
+            minY: 0,
             maxX: 0,
-            maxZ: 0
+            maxY: 0
         };
         this.alive = false;
         this.init();
@@ -33,26 +30,32 @@ module.exports = class Player {
         this.alive = false;
     }
 
-    spawn(x, z) {
-        this.x = x;
-        this.z = z;
+    spawn(x, y) {
+        /*this.x = x;
+        this.y = y;
         this.main.movingEntities.set(this.id, this);
-        this.main.entities.insert(this, this.getBoundsCircle(this.x, this.z, this.r));
+        this.main.entities.insert(this, this.getBoundsCircle(this.x, this.y, this.r));
+        this.alive = true;*/
+        this.x = x;
+        this.y = y;
+        this.main.movingEntities.set(this.id, this);
+        //console.log(this.main.movingEntities);
+        this.main.entities.insert(this, this.getBoundsCircle(this.x, this.y, this.r));
         this.alive = true;
     }
 
     move(delta) {
         this.xvel += Math.random() < 0.5 ? -this.speed : this.speed;
-        this.zvel += Math.random() < 0.5 ? -this.speed : this.speed;
+        this.yvel += Math.random() < 0.5 ? -this.speed : this.speed;
         this.x += this.xvel * delta;
-        this.z += this.zvel * delta;
+        this.y += this.yvel * delta;
         this.xvel /= 1.75;
-        this.zvel /= 1.75;
+        this.yvel /= 1.75;
     }
 
     update(delta) {
         this.move(delta);
-        this.main.entities.update(this, this.getBoundsCircle(this.x, this.z, this.r));
+        this.main.entities.update(this, this.getBoundsCircle(this.x, this.y, this.r));
         /*this.collisionBox.minX = this.x - this.r * 2;
         this.collisionBox.minZ = this.z - this.r * 2;
         this.collisionBox.maxX = this.x + this.r * 2;
@@ -65,16 +68,16 @@ module.exports = class Player {
         });*/
     }
 
-    getBoundsCircle(cx, cz, r) {
+    getBoundsCircle(x, y, r) {
         return {
-            minX: cx - r,
-            minZ: cz - r,
-            maxX: cx + r,
-            maxZ: cz + r
+            minX: x - r,
+            minY: y - r,
+            maxX: x + r,
+            maxY: y + r
         }
     }
 
     boundsCollide(a, b) {
-        return !(a.minX > b.maxX || a.maxX < b.minX || a.minZ > b.maxZ || a.maxZ < b.minZ);
+        return !(a.minX > b.maxX || a.maxX < b.minX || a.minY > b.maxY || a.maxY < b.minY);
     }
 };

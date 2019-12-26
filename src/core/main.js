@@ -1,6 +1,6 @@
 const Grid = require('../modules/grid.js'),
     Player = require('../entities/player.js'),
-    Server = require('./server.js'),
+    WebSocket = require('ws'),
     FakePlayer = require('../entities/fakePlayer.js');
 module.exports = class Main {
     constructor() {
@@ -9,8 +9,8 @@ module.exports = class Main {
         this.movingEntities = new Map();
         this.players = new Map();
         this.lastId = 0;
-        this.wsServer = new Server(this);
-        this.wsServer.init();
+        this.wsServer = new WebSocket.Server({port: 3000});
+        this.wsServer.on('connection', (socket) => this.onConnect(socket));
         for(let i = 0; i < 100000; i++) {
             const fake = new FakePlayer(this.nextId(), this);
             this.players.set(fake.id, fake);

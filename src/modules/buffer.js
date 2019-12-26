@@ -1,4 +1,3 @@
-"use strict";
 class Reader {
     constructor(buffer) {
         this.index = 0;
