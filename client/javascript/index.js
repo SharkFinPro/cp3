@@ -1,9 +1,8 @@
-"use strict";
 (function(){
 const players = new Map();
 let myId = null;
 const Renderer = new PIXI.autoDetectRenderer({
-		resolution: 2,
+		resolution: 1,
 		clearBeforeRender: true,
 		autoResize: true,
 		antialias: true,
@@ -16,29 +15,28 @@ if (!Renderer) {
 		alert('Canvas is not supported for your browser');
 		throw new Error('No canvas support');
 }
-Renderer.backgroundColor = 0x9AA0A8; // Black
+Renderer.backgroundColor = 0x9AA0A8;
 
 const camera = new PIXI.Container();
 camera.position.set(Renderer.screen.width / 2, Renderer.screen.height / 2);
 
 const ticker = new PIXI.ticker.Ticker();
 ticker.autoStart = false;
-ticker.stop();
-ticker.add(Update);
+ticker.start();
 
 const graphics = new PIXI.Graphics();
 graphics.beginFill(0xA7C4B5, 1);
 graphics.lineStyle(2, 0xFFFFFF);
 graphics.drawCircle(0, 0, 25);
 graphics.endFill();
-const texture = graphics.generateCanvasTexture(1, 1);
+const playersTexture = graphics.generateCanvasTexture(1, 1);
 
 graphics.clear();
 graphics.beginFill(0xA9D8B8, 1);
 graphics.lineStyle(2, 0xFFFFFF);
 graphics.drawCircle(0, 0, 25);
 graphics.endFill();
-const myTexture = graphics.generateCanvasTexture(1, 1);
+const yourTexture = graphics.generateCanvasTexture(1, 1);
 
 const s = new PIXI.Graphics();
 s.beginFill(0xBEFFC7, 1);
@@ -52,7 +50,7 @@ s.beginFill(0xFF00FF, 1);
 s.lineStyle(2, 0xFFFFFF);
 s.drawCircle(0, 0, 15);
 s.endFill();
-const ctext = s.generateCanvasTexture(1, 1);
+const bulletCollided = s.generateCanvasTexture(1, 1);
 
 const g = new PIXI.Graphics();
 g.beginFill(0x72705B, 1);
@@ -70,15 +68,11 @@ spr.texture = rect;
 stage.addChild(spr);
 
 const updatePos = (player) => {
-		/*//var r = Math.min((Date.now() - player.t) / 100, 1);
-		var r = Math.min((Date.now() - player.t), 1);
-		player.sprite.x = (1 - r) * player.ox + r * player.nx;
-		player.sprite.y = (1 - r) * player.oy + r * player.ny;*/
 		player.sprite.x = player.nx;
 		player.sprite.y = player.ny;
 };
 
-function Update(dT) {
+const Update = (dT) => {
 		players.forEach((player) => updatePos(player));
 		if (myId && players.has(myId)) {
 				const tp = players.get(myId).sprite;
@@ -91,15 +85,13 @@ function Update(dT) {
 /** ws **/
 const socket = new WebSocket('ws://localhost:3000');
 socket.binaryType = 'arraybuffer';
-const onOpen = (data) => {
-		ticker.start();
-};
-const onMessage = (message) => {
+socket.onmessage = (message) => {
 		const reader = new window.Buffer.Reader(message.data);
 		let id;
 		switch(reader.readUInt8()) {
 				case 1: // get myId
 						myId = reader.readUInt32();
+						ticker.add(Update);
 						break;
 				case 2: // position update
 						id = reader.readUInt32();
@@ -128,7 +120,7 @@ const onMessage = (message) => {
 												player.sprite.texture = bullet;
 												break;
 										case 25:
-												player.sprite.texture = id === myId ? myTexture : texture;
+												player.sprite.texture = id === myId ? yourTexture : playersTexture;
 												break;
 								}
 								player.sprite.x = x;
@@ -143,20 +135,18 @@ const onMessage = (message) => {
 						stage.removeChild(players.get(id).sprite);
 						players.delete(id);
 						break;
-				case 5:
+				case 5: // bullet collision
 						id = reader.readUInt32();
 						if(players.get(id).r !== 15) return;
-						players.get(id).sprite.texture = ctext;
+						players.get(id).sprite.texture = bulletCollided;
 						break;
-				case 6:
+				case 6: // bullet not colliding
 						id = reader.readUInt32();
 						if(players.get(id).r !== 15) return;
 						players.get(id).sprite.texture = bullet;
 						break;
 		}
 };
-socket.onopen = onOpen;
-socket.onmessage = onMessage;
 
 const keys = {};
 window.addEventListener('keyup', (event) => {
