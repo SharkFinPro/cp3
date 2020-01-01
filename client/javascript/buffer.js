@@ -1,4 +1,3 @@
-"use strict";
 (function() {
     class Reader {
         constructor(buffer) {

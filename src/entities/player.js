@@ -1,25 +1,16 @@
 const { Reader, Writer } = require('../lib/buffer.js'),
-    Bullet = require('./bullet.js');
-module.exports = class Player {
+    Bullet = require('./bullet.js'),
+    Entity = require("./entity.js");
+
+module.exports = class Player extends Entity {
     constructor(socket, id, main) {
+        super(id, main, 0, 0, 0, 0, 25);
         this.socket = socket;
-        this.id = id;
-        this.main = main;
-        this.x = 0;
-        this.y = 0;
-        this.r = 25;
         this.keys = {};
-        this.speed = 0.2;
-        this.jumpHeight = 8;
-        this.gravity = 2;
-        this.xvel = 0;
-        this.yvel = 0;
-        this.falling = true;
         this.visibleEntities = new Map();
         this.collidingEntities = new Map();
         this.viewBox = {minX: 0, minY: 0, maxX: 0, maxY: 0};
         this.collisionBox = {minX: 0, minY: 0, maxX: 0, maxY: 0};
-        this.alive = false;
         this.killWriter = new Writer(5);
         this.playerWriter = new Writer(14);
         this.cWriter = new Writer(7);
@@ -49,17 +40,11 @@ module.exports = class Player {
         this.spawn(0, 0);
     }
 
-    kill() {
-        this.main.movingEntities.delete(this.id);
-        this.main.entities.delete(this);
-        this.alive = false;
-    }
-
     spawn(x, y) {
         this.x = x;
         this.y = y;
         this.main.movingEntities.set(this.id, this);
-        this.main.entities.insert(this, this.getBoundsCircle(this.x, this.y, this.r));
+        this.main.entities.insert(this, this.getBounds(this.x, this.y, this.r));
         this.alive = true;
     }
 
@@ -88,7 +73,7 @@ module.exports = class Player {
         this.collisionBox.maxY = this.y + this.r * 2;
 
         this.visibleEntities.forEach((entity) => {
-            if (!this.boundsCollide(this.viewBox, this.getBoundsCircle(entity.x, entity.y, entity.r)) || entity.destroyed || !entity.alive) {
+            if (!this.boundsCollide(this.viewBox, this.getBounds(entity.x, entity.y, entity.r)) || entity.destroyed || !entity.alive) {
                 if (this.socket.readyState !== 1) return;
                 this.killWriter.reset()
                     .writeUInt8(3)
@@ -98,7 +83,7 @@ module.exports = class Player {
             }
         });
         this.collidingEntities.forEach((entity) => {
-            if (!this.boundsCollide(this.collisionBox, this.getBoundsCircle(entity.x, entity.y, entity.r)) && entity.id !== this.id) {
+            if (!this.boundsCollide(this.collisionBox, this.getBounds(entity.x, entity.y, entity.r)) && entity.id !== this.id) {
                 this.cWriter.reset()
                     .writeUInt8(6)
                     .writeUInt32(entity.id);
@@ -106,21 +91,8 @@ module.exports = class Player {
             }
         });
 
-
-        /*this.main.movingEntities.forEach((entity) => {
-            this.playerWriter.reset()
-                .writeUInt8(2)
-                .writeUInt32(entity.id)
-                .writeInt32(entity.x)
-                .writeInt32(entity.y)
-                .writeUInt8(entity.r);
-            this.socket.send(this.playerWriter.toBuffer());
-        });*/
-        //console.log(this.main.entities.retrieve(this.viewBox).size);
-
-
         this.main.entities.retrieve(this.viewBox).forEach((entity) => {
-            if (this.boundsCollide(this.viewBox, this.getBoundsCircle(entity.x, entity.y, entity.r))) {
+            if (this.boundsCollide(this.viewBox, this.getBounds(entity.x, entity.y, entity.r))) {
                 this.visibleEntities.set(entity.id, entity);
                 if (this.socket.readyState !== 1) return;
                 this.playerWriter.reset()
@@ -133,7 +105,7 @@ module.exports = class Player {
             }
         });
         this.main.entities.retrieve(this.collisionBox).forEach((entity) => {
-            if (this.boundsCollide(this.collisionBox, this.getBoundsCircle(entity.x, entity.y, entity.r)) && entity.id !== this.id) {
+            if (this.boundsCollide(this.collisionBox, this.getBounds(entity.x, entity.y, entity.r)) && entity.id !== this.id) {
                 this.collidingEntities.set(entity.id, entity);
                 this.cWriter.reset()
                     .writeUInt8(5)
@@ -141,28 +113,6 @@ module.exports = class Player {
                 this.socket.send(this.cWriter.toBuffer());
             }
         });
-        this.main.entities.update(this, this.getBoundsCircle(this.x, this.y, this.r));
-    }
-
-    getBoundsCircle(x, y, r) {
-        return {
-            minX: x - r,
-            minY: y - r,
-            maxX: x + r,
-            maxY: y + r
-        }
-    }
-
-    getBoundsRect(x, y, w, h) {
-        return {
-            minX: x,
-            minY: y,
-            maxX: x + w,
-            maxY: y + h
-        }
-    }
-
-    boundsCollide(a, b) {
-        return !(a.minX > b.maxX || a.maxX < b.minX || a.minY > b.maxY || a.maxY < b.minY);
+        this.main.entities.update(this, this.getBounds(this.x, this.y, this.r));
     }
 };
