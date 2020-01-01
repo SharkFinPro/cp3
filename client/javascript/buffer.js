@@ -133,7 +133,7 @@
     }
 
     writeString8(n) {
-      if (typeof n !== 'string') {
+      if (typeof n !== "string") {
         return;
       }
       for (let i in n) {
@@ -143,7 +143,7 @@
     }
 
     writeString16(n, le) {
-      if (typeof n !== 'string') {
+      if (typeof n !== "string") {
         return;
       }
       le = le || false;
@@ -154,7 +154,7 @@
     }
 
     writeString32(n, le) {
-      if (typeof n !== 'string') {
+      if (typeof n !== "string") {
         return;
       }
       le = le || false;

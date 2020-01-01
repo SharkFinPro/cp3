@@ -11,6 +11,8 @@ module.exports = class Bullet extends Entity {
     this.move(delta);
     this.main.entities.update(this, this.getBounds(this.x, this.y, this.r));
     this.life--;
-    if (this.life <= 0) this.destroy();
+    if (this.life <= 0) {
+      this.destroy();
+    }
   }
 };

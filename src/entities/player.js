@@ -1,5 +1,5 @@
-const { Reader, Writer } = require('../lib/buffer.js'),
-  Bullet = require('./bullet.js'),
+const { Reader, Writer } = require("../lib/buffer.js"),
+  Bullet = require("./bullet.js"),
   Entity = require("./entity.js");
 
 module.exports = class Player extends Entity {
@@ -22,7 +22,7 @@ module.exports = class Player extends Entity {
       .writeUInt8(1)
       .writeUInt32(this.id);
     this.socket.send(id.toBuffer());
-    this.socket.on('message', (data) => {
+    this.socket.on("message", (data) => {
       const reader = new Reader(Buffer.from(data));
       switch(reader.readUInt8()) {
         case 2:
@@ -36,7 +36,9 @@ module.exports = class Player extends Entity {
           break;
       }
     });
-    this.socket.on('close', () => this.main.onDisconnect(this));
+    this.socket.on("close", () => {
+      this.main.onDisconnect(this);
+    });
     this.spawn(0, 0);
   }
 
@@ -84,6 +86,7 @@ module.exports = class Player extends Entity {
         this.visibleEntities.delete(entity.id);
       }
     });
+    
     this.collidingEntities.forEach((entity) => {
       if (!this.boundsCollide(this.collisionBox, this.getBounds(entity.x, entity.y, entity.r)) && entity.id !== this.id) {
         this.cWriter.reset()
@@ -108,6 +111,7 @@ module.exports = class Player extends Entity {
         this.socket.send(this.playerWriter.toBuffer());
       }
     });
+
     this.main.entities.retrieve(this.collisionBox).forEach((entity) => {
       if (this.boundsCollide(this.collisionBox, this.getBounds(entity.x, entity.y, entity.r)) && entity.id !== this.id) {
         this.collidingEntities.set(entity.id, entity);

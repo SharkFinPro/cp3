@@ -6,14 +6,14 @@ const Renderer = new PIXI.autoDetectRenderer({
 	clearBeforeRender: true,
 	autoResize: true,
 	antialias: true,
-	view: document.getElementsByTagName('canvas')[0],
+	view: document.getElementsByTagName("canvas")[0],
 	width: window.innerWidth,
 	height: window.innerHeight,
 	roundPixels: true,
 });
 if (!Renderer) {
-	alert('Canvas is not supported for your browser');
-	throw new Error('No canvas support');
+	alert("Canvas is not supported for your browser");
+	throw new Error("No canvas support");
 }
 Renderer.backgroundColor = 0x9AA0A8;
 
@@ -83,8 +83,8 @@ const Update = (dT) => {
 };
 
 /** ws **/
-const socket = new WebSocket('ws://localhost:3000');
-socket.binaryType = 'arraybuffer';
+const socket = new WebSocket("ws://localhost:3000");
+socket.binaryType = "arraybuffer";
 socket.onmessage = (message) => {
 	const reader = new window.Buffer.Reader(message.data);
 	let id;
@@ -153,7 +153,7 @@ socket.onmessage = (message) => {
 };
 
 const keys = {};
-window.addEventListener('keyup', (event) => {
+window.addEventListener("keyup", (event) => {
 	if (!keys[event.keyCode]) {
 		return;
 	}
@@ -163,7 +163,7 @@ window.addEventListener('keyup', (event) => {
 	socket.send(writer.toBuffer());
 	keys[event.keyCode] = false;
 }, false);
-window.addEventListener('keydown', (event) => {
+window.addEventListener("keydown", (event) => {
 	if (keys[event.keyCode]) {
 		return;
 	}
@@ -173,7 +173,7 @@ window.addEventListener('keydown', (event) => {
 	socket.send(writer.toBuffer());
 	keys[event.keyCode] = true;
 }, false);
-document.getElementsByTagName('canvas')[0].addEventListener('click', (event) => {
+document.getElementsByTagName("canvas")[0].addEventListener("click", (event) => {
 	const mouseX = event.clientX,
 		mouseY = event.clientY;
 	const r = Math.atan2(mouseY - window.innerHeight / 2, mouseX - window.innerWidth / 2);

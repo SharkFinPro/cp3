@@ -1,7 +1,7 @@
-const WebSocket = require('ws'),
-  Grid = require('./lib/grid.js'),
-  Player = require('./entities/player.js'),
-  FakePlayer = require('./entities/fakePlayer.js');
+const WebSocket = require("ws"),
+  Grid = require("./lib/grid.js"),
+  Player = require("./entities/player.js"),
+  FakePlayer = require("./entities/fakePlayer.js");
 
 const server = {
   lastTime: Date.now(),
@@ -17,7 +17,7 @@ const server = {
       this.players.set(fake.id, fake);
     }
     this.gameLoop();
-    this.wsServer.on('connection', (socket) => {
+    this.wsServer.on("connection", (socket) => {
       this.onConnect(socket);
     });
   },
