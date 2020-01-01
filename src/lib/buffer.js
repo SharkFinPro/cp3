@@ -38,7 +38,7 @@ class Reader {
   }
 
   readString8() {
-    const data = "";
+    let data = "";
     while (true) {
       const char = this.readUInt8();
       if (char == 0) {
@@ -50,7 +50,7 @@ class Reader {
   }
 
   readString16(le) {
-    const data = "";
+    let data = "";
     le = le || false;
     while (true) {
       const char = this.readUInt16(le);
@@ -63,7 +63,7 @@ class Reader {
   }
 
   readString32(le) {
-    const data = "";
+    let data = "";
     le = le || false;
     while (true) {
       const char = this.readUInt32(le);
@@ -164,7 +164,4 @@ class Writer {
   }
 };
 
-module.exports = {
-  Writer: Writer,
-  Reader: Reader
-};
+module.exports = { Writer, Reader };

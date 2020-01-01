@@ -32,7 +32,7 @@ module.exports = class Player extends Entity {
           this.keys[reader.readUInt8()] = true;
           break;
         case 4:
-          new Bullet(this.main.nextId(), this.main, reader.readFloat32(), reader.readFloat32(), this.x, this.y);
+          const bullet = new Bullet(this.main.nextId(), this.main, reader.readFloat32(), reader.readFloat32(), this.x, this.y);
           break;
       }
     });
@@ -51,10 +51,18 @@ module.exports = class Player extends Entity {
   }
 
   move(delta) {
-    if (this.keys[39] || this.keys[68]) this.xvel += this.speed;
-    if (this.keys[37] || this.keys[65]) this.xvel -= this.speed;
-    if (this.keys[40] || this.keys[83]) this.yvel += this.speed;
-    if (this.keys[38] || this.keys[87]) this.yvel -= this.speed;
+    if (this.keys[39] || this.keys[68]) {
+      this.xvel += this.speed;
+    }
+    if (this.keys[37] || this.keys[65]) {
+      this.xvel -= this.speed;
+    }
+    if (this.keys[40] || this.keys[83]) {
+      this.yvel += this.speed;
+    }
+    if (this.keys[38] || this.keys[87]) {
+      this.yvel -= this.speed;
+    }
 
     this.x += this.xvel * delta;
     this.y += this.yvel * delta;
@@ -86,7 +94,7 @@ module.exports = class Player extends Entity {
         this.visibleEntities.delete(entity.id);
       }
     });
-    
+
     this.collidingEntities.forEach((entity) => {
       if (!this.boundsCollide(this.collisionBox, this.getBounds(entity.x, entity.y, entity.r)) && entity.id !== this.id) {
         this.cWriter.reset()

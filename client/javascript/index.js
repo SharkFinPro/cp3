@@ -1,5 +1,5 @@
 (function(){
-const players = new Map();
+const Players = new Map();
 let myId = null;
 const Renderer = new PIXI.autoDetectRenderer({
 	resolution: 1,
@@ -73,9 +73,9 @@ const updatePos = (player) => {
 };
 
 const Update = (dT) => {
-	players.forEach((player) => updatePos(player));
-	if (myId && players.has(myId)) {
-		const tp = players.get(myId).sprite;
+	Players.forEach((player) => updatePos(player));
+	if (myId && Players.has(myId)) {
+		const tp = Players.get(myId).sprite;
 		camera.pivot.x = (tp.x - camera.pivot.x) + camera.pivot.x;
 		camera.pivot.y = (tp.y - camera.pivot.y) + camera.pivot.y;
 	}
@@ -98,8 +98,8 @@ socket.onmessage = (message) => {
 			const x = reader.readInt32(),
 				y = reader.readInt32(),
 				r = reader.readUInt8();
-			if (players.has(id)) {
-				const player = players.get(id);
+			if (Players.has(id)) {
+				const player = Players.get(id);
 				player.ox = player.sprite.x;
 				player.oy = player.sprite.y;
 				player.nx = x;
@@ -113,7 +113,7 @@ socket.onmessage = (message) => {
 					oy: y,
 					nx: x,
 					ny: y,
-					r: r
+					r
 				};
 				switch(r) {
 					case 15:
@@ -126,28 +126,28 @@ socket.onmessage = (message) => {
 				player.sprite.x = x;
 				player.sprite.y = y;
 				player.sprite.anchor.set(0.5, 0.5);
-				players.set(id, player);
-				stage.addChild(players.get(id).sprite);
+				Players.set(id, player);
+				stage.addChild(Players.get(id).sprite);
 			}
 			break;
 		case 3: // player remove
 			id = reader.readUInt32();
-			stage.removeChild(players.get(id).sprite);
-			players.delete(id);
+			stage.removeChild(Players.get(id).sprite);
+			Players.delete(id);
 			break;
 		case 5: // bullet collision
 			id = reader.readUInt32();
-			if(players.get(id).r !== 15) {
+			if (Players.get(id).r !== 15) {
 				return;
 			}
-			players.get(id).sprite.texture = bulletCollided;
+			Players.get(id).sprite.texture = bulletCollided;
 			break;
 		case 6: // bullet not colliding
 			id = reader.readUInt32();
-			if(players.get(id).r !== 15) {
+			if(Players.get(id).r !== 15) {
 				return;
 			}
-			players.get(id).sprite.texture = bullet;
+			Players.get(id).sprite.texture = bullet;
 			break;
 	}
 };
@@ -158,7 +158,7 @@ window.addEventListener("keyup", (event) => {
 		return;
 	}
 	const writer = new window.Buffer.Writer(2);
-	writer.writeUInt8(2)
+	writer.writeUInt8(2);
 	writer.writeUInt8(event.keyCode);
 	socket.send(writer.toBuffer());
 	keys[event.keyCode] = false;
@@ -167,8 +167,8 @@ window.addEventListener("keydown", (event) => {
 	if (keys[event.keyCode]) {
 		return;
 	}
-	const writer = new window.Buffer.Writer(2)
-	writer.writeUInt8(3)
+	const writer = new window.Buffer.Writer(2);
+	writer.writeUInt8(3);
 	writer.writeUInt8(event.keyCode);
 	socket.send(writer.toBuffer());
 	keys[event.keyCode] = true;
@@ -177,9 +177,9 @@ document.getElementsByTagName("canvas")[0].addEventListener("click", (event) => 
 	const mouseX = event.clientX,
 		mouseY = event.clientY;
 	const r = Math.atan2(mouseY - window.innerHeight / 2, mouseX - window.innerWidth / 2);
-	const writer = new window.Buffer.Writer(9)
-	writer.writeUInt8(4)
-	writer.writeFloat32(Math.cos(r))
+	const writer = new window.Buffer.Writer(9);
+	writer.writeUInt8(4);
+	writer.writeFloat32(Math.cos(r));
 	writer.writeFloat32(Math.sin(r));
 	socket.send(writer.toBuffer());
 }, false);

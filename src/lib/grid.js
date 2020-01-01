@@ -61,6 +61,9 @@ module.exports = class Grid {
   }
 
   getKey(x, y) {
-    return {x: Math.floor(x / this.binSize), y: Math.floor(y / this.binSize)};
+    return {
+      x: Math.floor(x / this.binSize),
+      y: Math.floor(y / this.binSize)
+    };
   }
 };

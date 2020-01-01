@@ -39,7 +39,7 @@ module.exports = class Entity {
       minY: y - r,
       maxX: x + r,
       maxY: y + r
-    }
+    };
   }
 
   boundsCollide(a, b) {

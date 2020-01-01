@@ -6,7 +6,7 @@ const WebSocket = require("ws"),
 const server = {
   lastTime: Date.now(),
   now: this.lastTime,
-  wsServer: new WebSocket.Server({port: 3000}),
+  wsServer: new WebSocket.Server({ port: 3000 }),
   entities: new Grid(10000),
   movingEntities: new Map(),
   players: new Map(),
