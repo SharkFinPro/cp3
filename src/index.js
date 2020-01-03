@@ -12,7 +12,7 @@ const server = {
   players: new Map(),
   lastId: 0,
   init() {
-    for(let i = 0; i < 100000; i++) {
+    for (let i = 0; i < 100000; i++) {
       const fake = new FakePlayer(this.nextId(), this);
       this.players.set(fake.id, fake);
     }
@@ -34,7 +34,6 @@ const server = {
   },
   onConnect(socket) {
     const player = new Player(socket, this.nextId(), this);
-    socket.player = player;
     this.players.set(player.id, player);
   },
   onDisconnect(player) {
